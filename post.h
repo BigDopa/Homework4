@@ -26,21 +26,4 @@ private:
 	//Number of likes
 	int likes_;
 };
-
-class directmessage: public post
-{
-public:
-	//default constructor
-	DirectMessage();
-	//primary constructor
-	DirectMessage(int i, std::string m, int a, int l, int r);
-	//a method that returns the direct message
-	std::string displayPost();
-	//accessors
-	int getRECIPIENT() const;
-private:
-	//ID of reciever of message
-	int recipient_;
-
-};
 #endif

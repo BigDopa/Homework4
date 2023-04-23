@@ -4,7 +4,7 @@
 #include <stack>
 #include "user.h"
 #include "network.h"
-
+#include "post.h"
 using namespace std;
 int main()
 {
