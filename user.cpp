@@ -1,4 +1,5 @@
 #include "user.h"
+#include "directmessage.h"
 #include <cassert>
 #include <vector>
 //default contstructor, default values
@@ -9,6 +10,9 @@ user::user()
     year = 0000;
     zip = 00000;
     friends = std::vector<std::size_t>();
+    predecessor = -1;
+    depth = 0;
+    messages_ = std::vector<post*>(); 
 }
 //primary constructor, will set object variables to given paramteters
 user::user(std::string newname, int newyear, int newzip)
@@ -19,13 +23,14 @@ user::user(std::string newname, int newyear, int newzip)
     friends = std::vector<std::size_t>();
     predecessor = -1;
     depth = 0;
+    messages_ = std::vector<post*>(); 
 }
 //add user function to push new id into vector
 void user::add_friend(int id)
 {
     friends.push_back(id);
 }
-void user::set_depth(int d)
+void user::set_depth(int d) 
 {
     depth = d;
 }
@@ -36,6 +41,53 @@ void user::set_predecessor(std::size_t p)
 void user::set_id(std::size_t newid)
 {
     id = newid;
+}
+void user::addPost(post *p)
+{
+   messages_.push_back(p);
+}
+std::string user::displayPosts(int howmany)
+{
+    std::string output;
+    bool done = false;
+    int i = 0;
+    while(!done)
+    {
+        if ((typeid(messages_[i]) == typeid(post)) && (i != howmany))
+        {
+            output += messages_[i]->displayPost() + "\n\n";
+        }
+        if (i == howmany)
+        {
+            bool done = true;
+        }
+        i++;
+    }
+    return output;
+}
+std::string user::displayDMs(int who, std::string name, int howmany)
+{
+    std::string output, temp;
+    bool done = false;
+    int i = 0;
+    directmessage d;
+    while(!done)
+    {
+        if ((typeid(messages_[i]) == typeid(directmessage)) && (i != howmany))
+        {
+            messages_[i] = &d;
+            if (d.getRECIPIENT() == who)
+            {
+                output +=  "From: " + name + messages_[i]->displayPost() + "\n\n";
+            }
+        }
+        if (i == howmany)
+        {
+            bool done = true;
+        }
+        i++;
+    }
+    return output;
 }
 //delete user function to remove id from vector
 void user::delete_friend(int id)

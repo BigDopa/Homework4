@@ -1,5 +1,6 @@
 #include "network.h"
 #include "user.h"
+#include "directmessage.h"
 #include <cassert>
 #include <algorithm>
 #include <unordered_map>
@@ -427,6 +428,35 @@ std::vector<int> network::distance_user(int from, int &to, int distance)
                 time++;
             }
             s.pop();
+        }
+    }
+}
+void network::addPost(std::string who, std::string message, int likes, int id)
+{
+    users[get_id(who)].addPost(new post(id, message, get_id(who), likes));
+}
+void network::addDM(std::string who, std::string message, int likes, int id, std::string recipient)
+{
+    post* p  = new directmessage{id, message, get_id(who), likes, get_id(recipient)};
+    users[get_id(who)].addPost(p); 
+}
+void network::displayPosts(std::string name, int howmany)
+{
+    for (int i = 0; i < num_users(); i++)
+    {
+        if (users[i].getNAME() == name)
+        {
+            users[i].displayPosts(howmany);
+        }
+    }
+}
+void network::displayDM(std::string from, std::string to, int howmany)
+{
+    for (int i = 0; i < num_users(); i++)
+    {
+        if (users[i].getNAME() == from)
+        {
+            users[i].displayDMs(get_id(to), from, howmany);
         }
     }
 }

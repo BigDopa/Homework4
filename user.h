@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <vector>
-
+#include "post.h"
 class user
 {
 public:
@@ -21,6 +21,12 @@ void set_id(std::size_t newid);
 void set_depth(int d);
 //set predecessor function for bfs and disjoint
 void set_predecessor(std::size_t p);
+//adds post to user
+void addPost(post *p);
+//method that takes in a int and returns a string
+std::string displayPosts(int howmany);
+//method that takes in user ID, string and howmany int and returns dms between them
+std::string displayDMs(int who, std::string name, int howmany);
 //depth field
 int depth;
 //predecessor
@@ -44,5 +50,6 @@ int year;
 int zip;
 //firend list field
 std::vector<std::size_t> friends;
+std::vector<post*> messages_;
 }; 
 #endif

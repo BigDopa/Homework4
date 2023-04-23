@@ -28,6 +28,14 @@ class network
     std::vector<int> suggest_friends(int who, int& score);
     //distance from user function, takes in starting user, reference to a destination user, and a distance variable
     std::vector<int> distance_user(int from, int &to, int distance);
+    //displays posts
+    void displayPosts(std::string name, int howmany);
+    //displays DMs
+    void displayDM(std::string from, std::string to, int howmany);
+    //adds posts
+    void addPost(std::string who, std::string message, int likes, int id);
+    //adds DMS
+    void addDM(std::string who, std::string message, int likes, int id, std::string recipient);
     //returns id, given name
     int get_id(std::string name);
     //returns name, given id
