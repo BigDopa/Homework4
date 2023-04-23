@@ -15,12 +15,12 @@ post::post(int i, std::string message, int a, int l)
 	author_ = a;
 	likes_ = l;
 }
-//std::string post::displayPost()
-//{
-//	std::ostringstream s;
-//	s << getLIKES();
-//	return getMESSAGE() + "\nLiked by " + s.str() + " people.";
-//}
+std::string post::displayPost()
+{
+	std::ostringstream s;
+	s << getLIKES();
+	return getMESSAGE() + "\nLiked by " + s.str() + " people.";
+}
 int post::getID() const
 {
 	return id_;
