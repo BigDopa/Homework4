@@ -7,9 +7,9 @@ class directmessage: public post
 {
 public:
 	//default constructor
-	DirectMessage();
+	directmessage();
 	//primary constructor
-	DirectMessage(int i, std::string m, int a, int l, int r);
+	directmessage(int i, std::string m, int a, int l, int r);
 	//a method that returns the direct message
 	std::string displayPost();
 	//accessors

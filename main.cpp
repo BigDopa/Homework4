@@ -5,6 +5,7 @@
 #include "user.h"
 #include "network.h"
 #include "post.h"
+#include "directmessage.h"
 using namespace std;
 int main()
 {
