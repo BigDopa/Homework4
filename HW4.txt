@@ -1,0 +1,5 @@
+1. Added two new functions to display posts and DMS from users
+2. Went back and fixed formatting error with dispaly friends and display users, zip varaible was a int but would get rid of leading zeros so used stringstream to fix that with setw and setfill
+3. Fixed organization in the case/switch code in main.cpp, so case #s match with current and previous homework
+4. 13/14 are for reading user data and post data, included with submission
+5. For checking whether object in message vector was of type parent or child used typeid
