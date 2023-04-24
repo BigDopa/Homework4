@@ -4,6 +4,7 @@
 #include <vector>
 #include <typeinfo>
 #include <algorithm>
+#include <string>
 //default contstructor, default values
 user::user()
 {
@@ -54,8 +55,9 @@ std::string user::displayPosts(int howmany)
     int i = 0;  
     int c = 0;
     for (int i = 0; i < messages_.size(); i++)
-    {        
-        if ((typeid(*messages_[i]) == typeid(post) && (c != howmany)))
+    {    
+        int f = messages_[i]->displayPost().find('$');
+        if ((f == -1) && (c != howmany))
         {
             output += messages_[i]->displayPost() + "\n\n";
             c++;
@@ -70,7 +72,8 @@ std::string user::displayDMs(int who, std::string name, int howmany)
     int c = 0;
     for (int i = 0; i < messages_.size(); i++)
     {
-        if ((typeid(*messages_[i]) == typeid(directmessage) && (c != howmany)))
+        int f = messages_[i]->displayPost().find('$');
+        if ((f != -1) && (c != howmany))
         {
             directmessage *d = (directmessage*)messages_[i]; 
             if (d->getRECIPIENT() == who)
