@@ -4,6 +4,7 @@
 #include <cassert>
 #include <algorithm>
 #include <unordered_map>
+#include <iomanip>
 #include <queue>
 #include <vector>
 #include <fstream>
@@ -50,32 +51,38 @@ int network::add_connection(std::string s1, std::string s2)
 //print data function, when called prints out all of the relevant data from network vector, uysing setw to print out in allignment
 void network::print_data()
 {
-    std::cout << std::left << std::setw(2) << "ID" << std::setw(20) << " NAME" << std::setw(6) << "YEAR" << std::setw(6) << "ZIP" << std::endl;
-    std::cout << "==================================" << std::endl;
+    std::cout << std::left << std::setw(5) << "ID" << std::setw(25) << " NAME" << std::setw(6) << "YEAR" << std::setw(6) << "ZIP" << std::endl;
+    std::cout << "=========================================" << std::endl;
     for (int i = 0; i < users.size(); i++)
     {
-        std::cout << std::setw(3) << users[i].getID() << std::setw(20) << users[i].getNAME() << std::setw(6) << users[i].getYEAR() << std::setw(6) << users[i].getZIP() << std::endl;
+        std::stringstream s;
+        s << std::setw(5) << std::setfill('0') << users[i].getZIP();
+        std::string temp = s.str();
+        std::cout << std::setw(5) << users[i].getID() << std::setw(25) << users[i].getNAME() << std::setw(6) << users[i].getYEAR();
+        std::cout << temp << std::endl;
+        //std::cout << temp << std::endl;
     }
     std::cout << std::endl;
 }
 //print friends function, takes in ID, and iterates through the network vector to find relevant person, if found prints out data of the friend
 void network::print_friends(int id)
 {
-    std::cout << id << std::endl;
     bool found = false;
     for (int i = 0; i < users.size(); i++)
     {
         if (users[i].getID() == id)
         {
             found = true;
-            std::cout << "ID   Name                     Year      Zip  " << std::endl;
-            std::cout << "=============================================" << std::endl;
+            std::cout << std::left << std::setw(5) << "ID" << std::setw(25) << " NAME" << std::setw(6) << "YEAR" << std::setw(6) << "ZIP" << std::endl;
+            std::cout << "=========================================" << std::endl;
             auto friendlist = users[i].getFRIENDS();
             for (int j = 0; j < friendlist.size(); j++)
             {
-               std::cout << users[friendlist[j]].getID() << "        " << users[friendlist[j]].getNAME() << std::endl;
-               //users[friendlist[j]].getYEAR() << "            " << std::endl;
-               //users[friendlist[j]].getZIP() << std::endl;
+               std::stringstream s;
+               s << std::setw(5) << std::setfill('0') << users[friendlist[j]].getZIP();
+               std::string temp = s.str();
+               std::cout << std::setw(5) << users[friendlist[j]].getID() << std::setw(25) << users[friendlist[j]].getNAME() << std::setw(6) << users[friendlist[j]].getYEAR();
+               std::cout << temp << std::endl;
             }
         }
     }
@@ -208,8 +215,9 @@ int network::read_friends(char *fname)
             {
                 myline.erase(0, myline.find_first_not_of(" \n\r\t"));
                 myline.erase(myline.find_last_not_of(" \n\r\t") + 1);
-                //std::cout << "zip: " << myline << std::endl;
-                newzip = std::stoi(myline);
+                std::stringstream ss(myline);
+                ss >> newzip;
+                //std::cout << "zip: " << newzip << std::endl;
             }
             if (n == 4)
             {
@@ -504,6 +512,7 @@ std::vector<int> network::distance_user(int from, int &to, int distance)
             s.pop();
         }
     }
+    return path;
 }
 void network::addPost(std::string who, std::string message, int likes, int id)
 {

@@ -26,14 +26,14 @@ int main()
         cout << "4: Print User data" << endl;
         cout << "5: Print friends Data" << endl;
         cout << "6: Write data to file" << endl;
-        cout << "7: Read data from file" << endl;
-        cout << "8: Find shortest path between two users" << endl;
-        cout << "9: Find number of seperate friend groups" << endl;
-        cout << "10: Suggest Friends" << endl;
-        cout << "11: Explore Neighbors" << endl;
-        cout << "12: View most recent posts" << endl;
-        cout << "13: View most recent DMS" << endl;
-        cout << "14: read messages" << endl;
+        cout << "7: Find shortest path between two users" << endl;
+        cout << "8: Find number of seperate friend groups" << endl;
+        cout << "9: Suggest Friends" << endl;
+        cout << "10: Explore Neighbors" << endl;
+        cout << "11: View most recent posts" << endl;
+        cout << "12: View most recent DMS" << endl;
+        cout << "13: Read user data" << endl;
+        cout << "14: Read Post data" << endl;
         cout << "15: Exit Program" << endl;
         cin >> input;
         switch (input)
@@ -58,6 +58,7 @@ int main()
                 cout << "Person 2: ";
                 getline(cin, name2);
                 n.add_connection(name1, name2);
+                cout << endl;
                 break;
             case 3:
                 cout << "Enter both names, first and last" << endl;
@@ -67,26 +68,26 @@ int main()
                 cout << "Person 2: ";
                 getline(cin, name2);
                 n.remove_connection(name1, name2);
+                cout << endl;
                 break;
             case 4:
                 n.print_data();
+                cout << endl;
                 break;
             case 5:
                 cout << "Enter Name: ";
                 cin.ignore();
                 getline(cin, name);
                 n.print_friends(n.get_id(name));
+                cout << endl;
                 break;
             case 6:
                 cout << "Please provide file name: ";
                 cin >> filename;
                 n.write_friends(filename.data());
+                cout << endl;
                 break;
             case 7:
-                filename = "userdata.txt";
-                n.read_friends(filename.data());
-                break;
-            case 8:
                 cout << "Enter Person 1: ";
                 cin.ignore();
                 getline(cin, name1);
@@ -113,7 +114,7 @@ int main()
                 }
                 cout << endl;
                 break;
-            case 9:
+            case 8:
                 groups = n.groups();
                 for (int i = 0; i < groups.size(); i++)
                 {
@@ -125,7 +126,7 @@ int main()
                     cout << endl;
                 }
                 break;
-            case 10:
+            case 9:
                 cout << "Please enter user name: ";
                 cin.ignore();
                 getline(cin, name1);
@@ -139,8 +140,9 @@ int main()
                 {
                     cout << n.get_name(friends[i]) << " with score of " << score << endl;
                 }
+                cout << endl;
                 break;
-            case 11:
+            case 10:
                 cout << "Please enter user name: ";
                 cin.ignore();
                 getline(cin, name1);
@@ -167,15 +169,16 @@ int main()
                 }
                 cout << endl;
                 break;
-            case 12:
+            case 11:
                 cout << "Please enter user: ";
                 cin.ignore();
                 getline(cin, name1);
                 cout << "Please enter number of messages desired: ";
                 cin >> w;
                 n.displayPosts(name1, w);
+                cout << endl;
                 break;
-            case 13:
+            case 12:
                 cout << "Please enter user: ";
                 cin.ignore();
                 getline(cin, name1);
@@ -184,14 +187,24 @@ int main()
                 cout << "Please enter # of messages: ";
                 cin >> w;
                 n.displayDM(name1, name2, w);
+                cout << endl;
+                break;
+            case 13:
+                cout << "Please enter file name: ";
+                cin.ignore();
+                getline(cin, filename);
+                n.read_friends(filename.data());
+                cout << endl;
                 break;
             case 14:
-                filename = "posts.txt";
+                cout << "Please enter file name: ";
+                cin.ignore();
+                getline(cin, filename);
                 n.read_posts(filename.data());
-                //cout << "finished" << endl;
+                cout << endl;
                 break;
             default:  
-                cout << "Either 7 was entered or a incorrect input, exiting program!" << endl;
+                cout << "Either 15 was entered or a incorrect input, exiting program!" << endl;
                 loop = false;
                 break;
         }
