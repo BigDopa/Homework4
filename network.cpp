@@ -59,8 +59,9 @@ void network::print_data()
     std::cout << std::endl;
 }
 //print friends function, takes in ID, and iterates through the network vector to find relevant person, if found prints out data of the friend
-void network::print_friends(std::size_t id)
+void network::print_friends(int id)
 {
+    std::cout << id << std::endl;
     bool found = false;
     for (int i = 0; i < users.size(); i++)
     {
@@ -191,19 +192,22 @@ int network::read_friends(char *fname)
         {
             if(n == 1)
             {
-                myline.erase(0, myline.find_first_not_of(" \t"));
+                myline.erase(0, myline.find_first_not_of(" \n\r\t"));
+                myline.erase(myline.find_last_not_of(" \n\r\t") + 1);
                 //std::cout << "name: " << myline << std::endl;
                 newname = myline;
             }
             if (n == 2)
             {
-                myline.erase(0, myline.find_first_not_of(" \t"));
+                myline.erase(0, myline.find_first_not_of(" \n\r\t"));
+                myline.erase(myline.find_last_not_of(" \n\r\t") + 1);
                 //std::cout << "year: " << myline << std::endl;
                 newyear = std::stoi(myline);
             }
             if (n == 3)
             {
-                myline.erase(0, myline.find_first_not_of(" \t"));
+                myline.erase(0, myline.find_first_not_of(" \n\r\t"));
+                myline.erase(myline.find_last_not_of(" \n\r\t") + 1);
                 //std::cout << "zip: " << myline << std::endl;
                 newzip = std::stoi(myline);
             }
@@ -211,7 +215,8 @@ int network::read_friends(char *fname)
             {
                 add_user(user(newname, newyear, newzip));
                 std::stringstream ss(myline);
-                myline.erase(0, myline.find_first_not_of(" \t"));
+                myline.erase(0, myline.find_first_not_of(" \n\r\t"));
+                myline.erase(myline.find_last_not_of(" \n\r\t") + 1);
                 //std::cout << "friends: " << myline << std::endl;
                 while (ss >> friendid)
                 {
@@ -231,6 +236,75 @@ int network::read_friends(char *fname)
         std::cout << "Error File not read" << std::endl;
         return -1;
     }
+    myfile.close();
+    return 0;
+}
+int network::read_posts(char *fname)
+{
+    int id, likes, n;
+    std::string myline, author, message, recipient;
+    std::ifstream myfile(fname);  
+    n = 0;
+    std::getline(myfile, myline);
+    if (myfile.fail() == false)
+    {
+        while (std::getline(myfile, myline))
+        {
+        if (n == 0)
+        {
+            myline.erase(0, myline.find_first_not_of(" \n\r\t"));
+            myline.erase(myline.find_last_not_of(" \n\r\t") + 1);
+            //std::cout << "id: " << myline << std::endl;
+            id = std::stoi(myline);
+        }
+        if (n == 1)
+        {
+            myline.erase(0, myline.find_first_not_of(" \n\r\t"));
+            myline.erase(myline.find_last_not_of(" \n\r\t") + 1);
+            //std::cout << "message: " << myline << std::endl;
+            message = myline;
+        }
+        if (n == 2)
+        {
+            myline.erase(0, myline.find_first_not_of(" \n\r\t"));
+            myline.erase(myline.find_last_not_of(" \n\r\t") + 1);
+            //std::cout << "author: " << myline << std::endl;
+            author = get_name(std::stoi(myline));
+        }
+        if (n == 3)
+        {
+            myline.erase(0, myline.find_first_not_of(" \n\r\t"));
+            myline.erase(myline.find_last_not_of(" \n\r\t") + 1);
+            //std::cout << "likes: " << myline << std::endl;
+            likes = std::stoi(myline); 
+        }
+        if (n == 4)
+        {
+            myline.erase(0, myline.find_first_not_of(" \n\r\t"));
+            myline.erase(myline.find_last_not_of(" \n\r\t") + 1);
+            if (myline == "DM")
+            {
+                getline(myfile, myline);
+                myline.erase(0, myline.find_first_not_of(" \n\r\t"));
+                myline.erase(myline.find_last_not_of(" \n\r\t") + 1);
+                recipient = get_name(std::stoi(myline));
+                //std::cout << "recipient: " << myline << std::endl;
+                addDM(author, message, likes, id, recipient);
+                //std::cout << "added DM" << std::endl;
+            }
+            else
+            {   
+                addPost(author, message, likes, id);
+                //std::cout << "Added Post" << std::endl;
+            }
+            n = 0;
+            continue;
+        }
+        n++;
+        }
+    }
+    myfile.close();
+    //std::cout << "finished!" << std::endl;
     return 0;
 }
 //write friends function, takes in a pointer to a char which is the name of the file to write the data too, then writes out all of the data of every user in the network
@@ -279,9 +353,9 @@ int network::write_friends(char *fname)
 //get ID function, simply returns id of user given their name, will return -1 if name is not present
 int network::get_id(std::string name)
 {
-    for (int i = 0; i < users.size(); i++)
+    for (int i = 0; i < num_users(); i++)
     {
-        if (users[i].getNAME() == name)
+        if (name.compare(users[i].getNAME()) == 0)
         {
             return i;
         }
@@ -433,12 +507,13 @@ std::vector<int> network::distance_user(int from, int &to, int distance)
 }
 void network::addPost(std::string who, std::string message, int likes, int id)
 {
-    users[get_id(who)].addPost(new post(id, message, get_id(who), likes));
+    post *p = new post(id, message, get_id(who), likes);
+    users[get_id(who)].addPost(p);
 }
 void network::addDM(std::string who, std::string message, int likes, int id, std::string recipient)
 {
-    post* p  = new directmessage{id, message, get_id(who), likes, get_id(recipient)};
-    users[get_id(who)].addPost(p); 
+    directmessage *d = new directmessage{id, message, get_id(who), likes, get_id(recipient)};
+    users[get_id(who)].addPost(d); 
 }
 void network::displayPosts(std::string name, int howmany)
 {
@@ -446,7 +521,7 @@ void network::displayPosts(std::string name, int howmany)
     {
         if (users[i].getNAME() == name)
         {
-            users[i].displayPosts(howmany);
+            std::cout << users[i].displayPosts(howmany) << std::endl;
         }
     }
 }
@@ -456,7 +531,7 @@ void network::displayDM(std::string from, std::string to, int howmany)
     {
         if (users[i].getNAME() == from)
         {
-            users[i].displayDMs(get_id(to), from, howmany);
+            std::cout << users[i].displayDMs(get_id(to), from, howmany) << std::endl;
         }
     }
 }

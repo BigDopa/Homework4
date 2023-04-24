@@ -14,7 +14,8 @@ int main()
     stack<int> output;
     vector<vector<int>> groups;
     string name, name1, name2, filename;
-    int year, zip, input, id1, id2, score, d, loc;
+    int year, zip, input, id1, id2, score, d, loc, w;
+    size_t id;
     vector<int> temp, friends;
     while (loop == true)
     {
@@ -30,7 +31,10 @@ int main()
         cout << "9: Find number of seperate friend groups" << endl;
         cout << "10: Suggest Friends" << endl;
         cout << "11: Explore Neighbors" << endl;
-        cout << "12: Exit Program" << endl;
+        cout << "12: View most recent posts" << endl;
+        cout << "13: View most recent DMS" << endl;
+        cout << "14: read messages" << endl;
+        cout << "15: Exit Program" << endl;
         cin >> input;
         switch (input)
         {
@@ -79,8 +83,7 @@ int main()
                 n.write_friends(filename.data());
                 break;
             case 7:
-                cout << "Please enter file name: ";
-                cin >> filename;
+                filename = "userdata.txt";
                 n.read_friends(filename.data());
                 break;
             case 8:
@@ -163,6 +166,29 @@ int main()
                     }
                 }
                 cout << endl;
+                break;
+            case 12:
+                cout << "Please enter user: ";
+                cin.ignore();
+                getline(cin, name1);
+                cout << "Please enter number of messages desired: ";
+                cin >> w;
+                n.displayPosts(name1, w);
+                break;
+            case 13:
+                cout << "Please enter user: ";
+                cin.ignore();
+                getline(cin, name1);
+                cout << "Please enter recpient: ";
+                getline(cin, name2);
+                cout << "Please enter # of messages: ";
+                cin >> w;
+                n.displayDM(name1, name2, w);
+                break;
+            case 14:
+                filename = "posts.txt";
+                n.read_posts(filename.data());
+                //cout << "finished" << endl;
                 break;
             default:  
                 cout << "Either 7 was entered or a incorrect input, exiting program!" << endl;

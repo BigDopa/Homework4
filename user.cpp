@@ -2,6 +2,8 @@
 #include "directmessage.h"
 #include <cassert>
 #include <vector>
+#include <typeinfo>
+#include <algorithm>
 //default contstructor, default values
 user::user()
 {
@@ -49,43 +51,42 @@ void user::addPost(post *p)
 std::string user::displayPosts(int howmany)
 {
     std::string output;
-    bool done = false;
-    int i = 0;
-    while(!done)
-    {
-        if ((typeid(messages_[i]) == typeid(post)) && (i != howmany))
+    int i = 0;  
+    int c = 0;
+    for (int i = 0; i < messages_.size(); i++)
+    {        
+        if ((typeid(*messages_[i]) == typeid(post) && (c != howmany)))
         {
             output += messages_[i]->displayPost() + "\n\n";
+            c++;
         }
-        if (i == howmany)
-        {
-            bool done = true;
-        }
-        i++;
     }
     return output;
 }
 std::string user::displayDMs(int who, std::string name, int howmany)
 {
     std::string output, temp;
-    bool done = false;
     int i = 0;
-    directmessage d;
-    while(!done)
+    int c = 0;
+    for (int i = 0; i < messages_.size(); i++)
     {
-        if ((typeid(messages_[i]) == typeid(directmessage)) && (i != howmany))
+        if ((typeid(*messages_[i]) == typeid(directmessage) && (c != howmany)))
         {
-            messages_[i] = &d;
-            if (d.getRECIPIENT() == who)
+            directmessage *d = (directmessage*)messages_[i]; 
+            if (d->getRECIPIENT() == who)
             {
-                output +=  "From: " + name + messages_[i]->displayPost() + "\n\n";
+               output +=  "From: " + name + ": " + messages_[i]->displayPost();
+               for (int k = 0; k < output.size(); k++)
+               {
+                    if (output[k] == '$')
+                    {
+                        output[k] = '\0';
+                    }
+               }
+               output += "\n\n";
             }
+            c++;
         }
-        if (i == howmany)
-        {
-            bool done = true;
-        }
-        i++;
     }
     return output;
 }

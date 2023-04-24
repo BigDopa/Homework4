@@ -19,7 +19,7 @@ class network
     //print data
     void print_data();
     //print friends
-    void print_friends(std::size_t id);
+    void print_friends(int id);
     //Vector of shortest path (from -> to)
     std::vector<int> shortest_path(int from, int to);
     //Vector of vectors, for groups of seperate friends in graph
@@ -42,6 +42,8 @@ class network
     std::string get_name(int id);
     //reads in data from file
     int read_friends(char *fname);
+    //reads posts from file
+    int read_posts(char *fname);
     //writes data from the file
     int write_friends(char *fname);
     //returns number of users
